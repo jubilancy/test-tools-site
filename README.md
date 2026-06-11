@@ -1,4 +1,4 @@
-# 11ty Auto-Nav Site
+# 11ty Auto-Nav Tools Site
 
 A minimal 11ty setup that auto-generates navigation from your HTML files—no config updates needed.
 
