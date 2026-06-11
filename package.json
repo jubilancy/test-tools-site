@@ -1,0 +1,16 @@
+{
+  "name": "js-tools-repo",
+  "version": "1.0.0",
+  "description": "15 Self-Contained JavaScript Tools",
+  "main": "docs/index.html",
+  "scripts": {
+    "start": "npx http-server docs -p 8000 -o"
+  },
+  "keywords": [
+    "javascript",
+    "tools",
+    "utilities"
+  ],
+  "author": "",
+  "license": "MIT"
+}

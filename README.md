@@ -1,65 +1,73 @@
-# 11ty Auto-Nav Tools Site
+# 15 Self-Contained JavaScript Tools
 
-A minimal 11ty setup that auto-generates navigation from your HTML files—no config updates needed.
+A curated collection of 15 powerful, self-contained JavaScript libraries — all in one place with a clean, unified interface.
 
-## How It Works
+## Tools Included
 
-- **Auto-discovery**: Any `.html` file in `src/` with frontmatter automatically appears in nav
-- **Layout wrapping**: All pages get consistent styling + navigation
-- **GitHub Pages**: One workflow file handles builds & deployment
-- **Zero friction**: Add a file → it appears in nav → push → live
+1. **Papa Parse** — Parse and generate CSV files
+2. **Lunr.js** — Client-side full-text search
+3. **Diff2Html** — Beautiful code diff visualization
+4. **Mermaid.js** — Create diagrams from text
+5. **Rough.js** — Hand-drawn style graphics
+6. **Chart.js** — Data visualization charts
+7. **JSZip** — Create and manipulate ZIP files
+8. **QRCode.js** — Generate QR codes
+9. **Tesseract.js** — Optical Character Recognition
+10. **Alpine.js** — Lightweight DOM manipulation
+11. **SortableJS** — Drag-and-drop reordering
+12. **Canvas-Confetti** — Celebration animations
+13. **Math.js** — Mathematics library
+14. **Day.js** — Lightweight date library
 
-## Setup
+## Usage
 
-```bash
-# Install dependencies
-npm install
+1. Clone this repo
+2. Open `docs/index.html` in a browser (or deploy to GitHub Pages)
+3. Navigate between tools using the top navigation
 
-# Run locally (live reload)
-npm run dev
+## Deployment
 
-# Build for production
-npm run build
+This site is configured for **GitHub Pages**:
+
+1. Push to GitHub
+2. Go to Settings → Pages
+3. Set "Deploy from a branch" → `main` → `/docs` folder
+4. Done!
+
+Your site will be live at: `https://yourusername.github.io/js-tools-repo`
+
+## Structure
+
+```
+js-tools-repo/
+├── docs/
+│   ├── index.html
+│   ├── 01-papa-parse.html
+│   ├── 02-lunrjs.html
+│   └── ... (13 more tools)
+├── README.md
+└── .gitignore
 ```
 
-Visit `http://localhost:8080` to see your site with live reload.
+Each tool page includes:
+- **Unified header** with project title
+- **Sticky navigation** to jump between tools
+- **Clean layout** with proper styling
+- **Tool content** injected into the boilerplate
 
-## Adding New Pages
+## Features
 
-Create a new `.html` file in `src/`:
+- ✅ No build step needed
+- ✅ All tools self-contained (no external dependencies)
+- ✅ Responsive design (mobile-friendly)
+- ✅ Dark navigation with gradient header
+- ✅ Active link highlighting
+- ✅ Automatic nav generation
 
-```html
+## Browser Support
+
+All modern browsers (Chrome, Firefox, Safari, Edge)
+
 ---
-layout: layout.njk
-title: My New Page
----
 
-<h1>My New Page</h1>
-
-<p>Content here...</p>
-```
-
-That's it. It appears in the nav automatically.
-
-## Deploying to GitHub Pages
-
-1. Push this folder to GitHub (new repo)
-2. Go to **Settings → Pages → Build & Deployment**
-3. Set source to **GitHub Actions**
-4. The workflow will trigger automatically on push
-5. Site deploys to `https://username.github.io/repo-name`
-
-## Customizing
-
-- **Navigation order**: Edit `.eleventy.js` and change the `sort()` logic
-- **Styling**: Edit `src/css/style.css`
-- **Layout**: Edit `src/_includes/layout.njk`
-
-## Adding Folders / Subpages
-
-If you want a deeper structure (e.g., `portfolio/project1.html`), the current setup treats files at the root only. To handle subfolders:
-
-1. Edit `.eleventy.js` to recursively walk directories
-2. Or use 11ty's built-in collections + dynamic paths
-
-Ask if you need that setup.
+Built with ❤️
