@@ -1,0 +1,375 @@
+---
+layout: layout.njk
+title: Qrcodejs
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QRCode.js - QR Code Generator</title>
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 900px;
+            width: 100%;
+            padding: 40px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        .input-section h3,
+        .output-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+        input[type="text"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        .control-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: #333;
+            font-weight: 600;
+            font-size: 13px;
+        }
+        select,
+        input[type="range"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: transform 0.2s;
+            flex: 1;
+            min-width: 120px;
+        }
+        button:hover {
+            transform: translateY(-2px);
+        }
+        button.secondary {
+            background: #f0f0f0;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+        button.secondary:hover {
+            background: #e0e0e0;
+        }
+        .qr-container {
+            background: #f9f9f9;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 350px;
+        }
+        #qrCode {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .info {
+            background: #e3f2fd;
+            border: 1px solid #90caf9;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #1565c0;
+            margin-top: 20px;
+        }
+        .use-cases {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 8px;
+        }
+        .use-cases h4 {
+            font-size: 13px;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        .use-cases ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        .use-cases li {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 4px;
+            padding-left: 20px;
+            position: relative;
+        }
+        .use-cases li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+        .value-display {
+            background: white;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #666;
+            word-break: break-all;
+            font-family: 'Monaco', 'Courier New', monospace;
+            margin-bottom: 10px;
+        }
+        @media (max-width: 768px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📱 QRCode.js</h1>
+        <p class="subtitle">Generate QR codes instantly - encode URLs, text, and contact info</p>
+        
+        <div class="main-grid">
+            <div class="input-section">
+                <h3>Generate QR Code</h3>
+                
+                <div class="control-group">
+                    <label for="qrType">Type:</label>
+                    <select id="qrType" onchange="updateValue()">
+                        <option value="url">URL</option>
+                        <option value="text">Text</option>
+                        <option value="email">Email</option>
+                        <option value="phone">Phone</option>
+                        <option value="wifi">WiFi</option>
+                    </select>
+                </div>
+
+                <div id="inputFields">
+                    <div class="control-group">
+                        <label for="inputValue">Value:</label>
+                        <input type="text" id="inputValue" placeholder="https://example.com" />
+                    </div>
+                </div>
+
+                <div class="control-group" id="extraFields" style="display: none;">
+                    <label for="extraValue1">Extra:</label>
+                    <input type="text" id="extraValue1" placeholder="" />
+                </div>
+
+                <div class="control-group">
+                    <label for="errorCorrection">Error Correction:</label>
+                    <select id="errorCorrection">
+                        <option value="L">Low (7%)</option>
+                        <option value="M" selected>Medium (15%)</option>
+                        <option value="Q">Quartile (25%)</option>
+                        <option value="H">High (30%)</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <label for="size">Size: <span id="sizeValue">200</span>px</label>
+                    <input type="range" id="size" min="100" max="400" value="200" onchange="updateSize()" />
+                </div>
+
+                <div class="button-group">
+                    <button onclick="generateQR()">🔄 Generate</button>
+                    <button class="secondary" onclick="downloadQR()">💾 Download</button>
+                </div>
+
+                <div class="use-cases">
+                    <h4>💡 Quick Templates:</h4>
+                    <ul>
+                        <li><button class="secondary" style="width: 100%; margin: 4px 0; padding: 6px;" onclick="loadTemplate('youtube')">YouTube Channel</button></li>
+                        <li><button class="secondary" style="width: 100%; margin: 4px 0; padding: 6px;" onclick="loadTemplate('portfolio')">Portfolio Link</button></li>
+                        <li><button class="secondary" style="width: 100%; margin: 4px 0; padding: 6px;" onclick="loadTemplate('contact')">Contact Info</button></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="output-section">
+                <h3>QR Code Preview</h3>
+                <div class="qr-container" id="qrContainer">
+                    <div id="qrCode"></div>
+                </div>
+                <div class="info">
+                    💡 <strong>Tip:</strong> Adjust error correction for environments with poor visibility. Adjust size for different use cases.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateValue() {
+            const type = document.getElementById('qrType').value;
+            const inputValue = document.getElementById('inputValue');
+            const extraFields = document.getElementById('extraFields');
+            
+            extraFields.style.display = 'none';
+
+            switch(type) {
+                case 'url':
+                    inputValue.placeholder = 'https://example.com';
+                    inputValue.value = 'https://example.com';
+                    break;
+                case 'text':
+                    inputValue.placeholder = 'Enter any text';
+                    inputValue.value = 'Hello World';
+                    break;
+                case 'email':
+                    inputValue.placeholder = 'email@example.com';
+                    inputValue.value = 'user@example.com';
+                    break;
+                case 'phone':
+                    inputValue.placeholder = '+1234567890';
+                    inputValue.value = '+1234567890';
+                    break;
+                case 'wifi':
+                    inputValue.placeholder = 'Network Name';
+                    inputValue.value = 'MyNetwork';
+                    extraFields.style.display = 'block';
+                    document.getElementById('extraValue1').placeholder = 'Password';
+                    break;
+            }
+            generateQR();
+        }
+
+        function generateQR() {
+            const type = document.getElementById('qrType').value;
+            const value = document.getElementById('inputValue').value;
+            const size = parseInt(document.getElementById('size').value);
+            const errorCorrection = document.getElementById('errorCorrection').value;
+
+            if (!value.trim()) {
+                alert('Please enter a value');
+                return;
+            }
+
+            let qrValue = value;
+
+            switch(type) {
+                case 'email':
+                    qrValue = `mailto:${value}`;
+                    break;
+                case 'phone':
+                    qrValue = `tel:${value}`;
+                    break;
+                case 'wifi':
+                    const password = document.getElementById('extraValue1').value || '';
+                    qrValue = `WIFI:T:WPA;S:${value};P:${password};;`;
+                    break;
+            }
+
+            document.getElementById('qrCode').innerHTML = '';
+            
+            new QRCode(document.getElementById('qrCode'), {
+                text: qrValue,
+                width: size,
+                height: size,
+                correctLevel: QRCode.CorrectLevel[errorCorrection]
+            });
+        }
+
+        function updateSize() {
+            document.getElementById('sizeValue').textContent = document.getElementById('size').value;
+            generateQR();
+        }
+
+        function downloadQR() {
+            const canvas = document.querySelector('#qrCode canvas');
+            if (!canvas) {
+                alert('Generate a QR code first');
+                return;
+            }
+            const link = document.createElement('a');
+            link.href = canvas.toDataURL();
+            link.download = 'qrcode.png';
+            link.click();
+        }
+
+        function loadTemplate(template) {
+            document.getElementById('qrType').value = 'url';
+            switch(template) {
+                case 'youtube':
+                    document.getElementById('inputValue').value = 'https://youtube.com';
+                    break;
+                case 'portfolio':
+                    document.getElementById('inputValue').value = 'https://yourportfolio.com';
+                    break;
+                case 'contact':
+                    document.getElementById('qrType').value = 'email';
+                    document.getElementById('inputValue').value = 'contact@example.com';
+                    break;
+            }
+            updateValue();
+        }
+
+        // Initialize
+        generateQR();
+    </script>
+</body>
+</html>

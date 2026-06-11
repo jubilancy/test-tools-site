@@ -1,0 +1,336 @@
+---
+layout: layout.njk
+title: Sortablejs
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SortableJS - Drag & Drop Lists</title>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 1000px;
+            width: 100%;
+            padding: 40px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        .section h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .list {
+            min-height: 300px;
+            background: #f9f9f9;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        .list.dragover {
+            background: #e8f5e9;
+            border-color: #81c784;
+        }
+        .list-item {
+            background: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            cursor: move;
+            border-left: 4px solid #fa709a;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .list-item:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        .list-item.sortable-chosen {
+            opacity: 0.8;
+            box-shadow: 0 8px 20px rgba(250, 112, 154, 0.3);
+        }
+        .list-item.sortable-ghost {
+            opacity: 0.4;
+            background: #f0f0f0;
+        }
+        .drag-handle {
+            color: #fa709a;
+            font-weight: bold;
+            cursor: grab;
+            flex-shrink: 0;
+        }
+        .drag-handle:active {
+            cursor: grabbing;
+        }
+        .item-text {
+            flex: 1;
+            color: #333;
+        }
+        .item-priority {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            color: white;
+        }
+        .priority-high {
+            background: #ff5252;
+        }
+        .priority-medium {
+            background: #ff9800;
+        }
+        .priority-low {
+            background: #4caf50;
+        }
+        button {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: transform 0.2s;
+            margin-bottom: 15px;
+        }
+        button:hover {
+            transform: translateY(-2px);
+        }
+        button.secondary {
+            background: #f0f0f0;
+            color: #333;
+            border: 1px solid #ddd;
+            width: 100%;
+        }
+        button.secondary:hover {
+            background: #e0e0e0;
+        }
+        .controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        input[type="text"],
+        select {
+            flex: 1;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+        input[type="text"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #fa709a;
+        }
+        .info {
+            background: #e3f2fd;
+            border: 1px solid #90caf9;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 12px;
+            color: #1565c0;
+            margin-top: 20px;
+            line-height: 1.6;
+        }
+        .empty {
+            text-align: center;
+            color: #999;
+            padding: 40px 20px;
+            font-size: 14px;
+        }
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔀 SortableJS</h1>
+        <p class="subtitle">Drag & drop to reorder - make lists interactive and responsive</p>
+        
+        <div class="grid">
+            <div class="section">
+                <h3>📝 Add New Item</h3>
+                <div class="input-group">
+                    <input type="text" id="itemInput" placeholder="Item name..." />
+                    <select id="prioritySelect">
+                        <option value="low">Low</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+                <button onclick="addItem()">Add Item</button>
+
+                <h3 style="margin-top: 30px;">To-Do List</h3>
+                <div class="list" id="todoList">
+                    <div class="list-item">
+                        <span class="drag-handle">⋮⋮</span>
+                        <span class="item-text">Buy groceries</span>
+                        <span class="item-priority priority-high">High</span>
+                    </div>
+                    <div class="list-item">
+                        <span class="drag-handle">⋮⋮</span>
+                        <span class="item-text">Finish project</span>
+                        <span class="item-priority priority-medium">Medium</span>
+                    </div>
+                    <div class="list-item">
+                        <span class="drag-handle">⋮⋮</span>
+                        <span class="item-text">Call mom</span>
+                        <span class="item-priority priority-low">Low</span>
+                    </div>
+                </div>
+                <button class="secondary" onclick="clearTodo()">Clear List</button>
+            </div>
+
+            <div class="section">
+                <h3>Backlog (Drag here)</h3>
+                <div class="list" id="backlogList">
+                    <div class="empty">Drag items here to deprioritize</div>
+                </div>
+
+                <h3 style="margin-top: 30px;">Completed (Drag here)</h3>
+                <div class="list" id="completedList">
+                    <div class="empty">Drag items here when done</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="info">
+            ✨ <strong>Features:</strong> Drag items between lists, add new items with priorities, visual feedback while dragging. Perfect for task management, kanban boards, and priority sorting!
+        </div>
+    </div>
+
+    <script>
+        // Initialize Sortable instances
+        const todoList = document.getElementById('todoList');
+        const backlogList = document.getElementById('backlogList');
+        const completedList = document.getElementById('completedList');
+
+        const options = {
+            group: 'lists',
+            animation: 150,
+            ghostClass: 'sortable-ghost',
+            chosenClass: 'sortable-chosen',
+            dragClass: 'sortable-drag'
+        };
+
+        Sortable.create(todoList, options);
+        Sortable.create(backlogList, options);
+        Sortable.create(completedList, options);
+
+        function addItem() {
+            const input = document.getElementById('itemInput');
+            const priority = document.getElementById('prioritySelect').value;
+            
+            if (!input.value.trim()) {
+                alert('Please enter an item name');
+                return;
+            }
+
+            const item = document.createElement('div');
+            item.className = 'list-item';
+            
+            const priorityClass = `priority-${priority}`;
+            const priorityText = priority.charAt(0).toUpperCase() + priority.slice(1);
+            
+            item.innerHTML = `
+                <span class="drag-handle">⋮⋮</span>
+                <span class="item-text">${input.value}</span>
+                <span class="item-priority ${priorityClass}">${priorityText}</span>
+            `;
+
+            // Remove empty state if it exists
+            const empty = todoList.querySelector('.empty');
+            if (empty) empty.remove();
+
+            todoList.appendChild(item);
+            input.value = '';
+            input.focus();
+        }
+
+        function clearTodo() {
+            const items = todoList.querySelectorAll('.list-item');
+            if (items.length === 0) {
+                alert('Nothing to clear');
+                return;
+            }
+            if (confirm('Clear all items from the To-Do list?')) {
+                items.forEach(item => item.remove());
+                todoList.innerHTML = '<div class="empty">No items yet. Add one to get started!</div>';
+            }
+        }
+
+        // Handle dragover for visual feedback
+        [todoList, backlogList, completedList].forEach(list => {
+            list.addEventListener('dragover', () => {
+                list.classList.add('dragover');
+            });
+            
+            list.addEventListener('dragleave', () => {
+                list.classList.remove('dragover');
+            });
+            
+            list.addEventListener('drop', () => {
+                list.classList.remove('dragover');
+                
+                // Remove empty states when items are added
+                const empty = list.querySelector('.empty');
+                if (empty && list.children.length > 1) {
+                    empty.remove();
+                }
+            });
+        });
+
+        // Allow Enter key to add item
+        document.getElementById('itemInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') addItem();
+        });
+    </script>
+</body>
+</html>
